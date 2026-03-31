@@ -1,0 +1,8 @@
+fastapi
+uvicorn[standard]
+python-dotenv
+pydantic
+langchain>=0.3
+langchain-anthropic
+langgraph
+sse-starlette

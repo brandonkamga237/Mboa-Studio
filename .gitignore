@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+*.egg-info/
+dist/
+build/
+
+# API storage
+api/storage/downloads/*
+!api/storage/downloads/.gitkeep
+
+# Node (root if needed)
+node_modules/
+
+# IDE
+.vscode/
+.idea/
+*.sw?
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.local
+
+# Build outputs
+*.log
+
+# Presentations (local only)
+presentation/
