@@ -1,11 +1,12 @@
 import asyncio
 import json
-from fastapi import APIRouter
+from fastapi import APIRouter, Request
 from fastapi.responses import StreamingResponse
 from models.schemas import GenerateRequest
 from services.nodes.generate_brief import generate_brief
 from services.nodes.render_svg import render_svg
 from services.nodes.validate_svg import validate_svg, should_retry
+from services.storage import is_maintenance, get_config, track_generation
 
 router = APIRouter()
 
@@ -38,9 +39,19 @@ def _thinking(text: str) -> str:
 
 
 @router.post("/generate")
-async def generate_logos(request: GenerateRequest):
+async def generate_logos(request: GenerateRequest, http_request: Request):
     async def event_stream():
+        # ── Maintenance gate ────────────────────────────────────────────
+        if is_maintenance():
+            cfg = get_config()
+            msg = cfg.get("maintenance_message", "L'application est en maintenance.")
+            yield f"event: maintenance\ndata: {json.dumps({'message': msg})}\n\n"
+            return
+
         state = {**_EMPTY_STATE, "completed_form": request.completed_form}
+        ip = http_request.headers.get("x-forwarded-for", http_request.client.host if http_request.client else "unknown")
+        ua = http_request.headers.get("user-agent", "")
+        referer = http_request.headers.get("referer", "")
 
         try:
             # ── Stage 1: Brief ──────────────────────────────────────────────
@@ -108,6 +119,11 @@ async def generate_logos(request: GenerateRequest):
                         yield f"event: logo\ndata: {json.dumps({'index': i, 'svg': svg, 'description': desc})}\n\n"
 
                 retries += 1
+
+            # ── Track analytics ─────────────────────────────────────────
+            brand_name = request.completed_form.get("brand_name", "") if isinstance(request.completed_form, dict) else ""
+            valid_count = len([s for s in state.get("svgs", []) if s])
+            track_generation(ip, ua, referer, brand_name, valid_count)
 
             yield f"event: done\ndata: {{}}\n\n"
 

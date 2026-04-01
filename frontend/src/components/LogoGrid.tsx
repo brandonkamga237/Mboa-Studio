@@ -21,7 +21,7 @@ export default function LogoGrid({ logos, selectedIndex, onSelect, title = "Conc
         </p>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "0.875rem" }}>
+      <div className="logo-grid-2col" style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "0.875rem" }}>
         {logos.map((c, i) => (
           <LogoCard key={i} concept={c} isSelected={selectedIndex === i} onClick={() => c && onSelect(i)} />
         ))}

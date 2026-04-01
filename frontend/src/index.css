@@ -238,3 +238,43 @@
   0%, 100% { transform: translateY(0); opacity: 1; }
   50%       { transform: translateY(-3px); opacity: 0.4; }
 }
+
+/* ── Responsive ──────────────────────────────────────────────────────────── */
+
+@media (max-width: 640px) {
+  body { font-size: 14px; }
+
+  /* Tighter surfaces on mobile */
+  .surface { border-radius: 10px; }
+
+  /* Full-width buttons on mobile */
+  .btn-full-mobile { width: 100% !important; }
+
+  /* Touch-friendly minimum tap target */
+  .btn { min-height: 40px; }
+
+  /* Admin: hide sidebar, show bottom nav */
+  .admin-sidebar  { display: none !important; }
+  .admin-bottomnav { display: flex !important; }
+
+  /* Admin: full-width main content when no sidebar */
+  .admin-main { padding: 1.25rem 1rem !important; }
+
+  /* KPI grid: 2 columns max on mobile */
+  .kpi-grid-4 { grid-template-columns: repeat(2, 1fr) !important; }
+  .kpi-grid-3 { grid-template-columns: 1fr !important; }
+  .kpi-grid-2 { grid-template-columns: 1fr !important; }
+
+  /* SVG editor: stack vertically */
+  .editor-grid { grid-template-columns: 1fr !important; }
+
+  /* Thinking stage progress: ensure it scrolls */
+  .stage-progress { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+  /* Logo grid: single column on very small screens */
+  .logo-grid-2col { grid-template-columns: repeat(2, 1fr) !important; }
+}
+
+@media (max-width: 400px) {
+  .logo-grid-2col { grid-template-columns: 1fr !important; }
+}

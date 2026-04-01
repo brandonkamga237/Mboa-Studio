@@ -48,32 +48,39 @@ export default function ChatInput({
         rows={minRows}
         placeholder={placeholder}
         disabled={isLoading}
-        className="w-full resize-none bg-transparent outline-none px-5 pt-5 pb-3"
+        className="w-full resize-none bg-transparent outline-none"
         style={{
           color: "var(--text-1)",
           fontSize: "0.9375rem",
           lineHeight: "1.65",
           minHeight: `${minRows * 1.65}rem`,
+          padding: "clamp(0.875rem, 3vw, 1.25rem)",
+          paddingBottom: "0.75rem",
         }}
       />
       <div
-        className="flex items-center justify-between px-4 pb-4 pt-2"
-        style={{ borderTop: "1px solid var(--border)" }}
+        style={{
+          borderTop: "1px solid var(--border)",
+          display: "flex", alignItems: "center", justifyContent: "space-between",
+          padding: "0.75rem clamp(0.875rem, 3vw, 1rem)",
+          gap: "0.75rem",
+        }}
       >
         <span style={{ fontSize: "0.75rem", color: "var(--text-3)" }}>
-          ⌘ + Enter pour envoyer
+          Ctrl + Entrée
         </span>
         <button
           type="button"
           onClick={submit}
           disabled={isLoading || !text.trim()}
           className="btn btn-black"
+          style={{ flexShrink: 0 }}
         >
           {isLoading ? (
             <>
               <svg className="animate-spin" width="13" height="13" viewBox="0 0 24 24" fill="none">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"/>
+                <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" style={{ opacity: 0.25 }}/>
+                <path fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" style={{ opacity: 0.75 }}/>
               </svg>
               Analyse…
             </>

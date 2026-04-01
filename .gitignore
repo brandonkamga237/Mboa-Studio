@@ -32,6 +32,11 @@ Thumbs.db
 .env
 .env.local
 
+# Admin data (user analytics & feedback — do not commit)
+backend/data/analytics.json
+backend/data/feedback.json
+backend/data/config.json
+
 # Build outputs
 *.log
 

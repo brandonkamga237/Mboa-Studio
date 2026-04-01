@@ -6,6 +6,7 @@ import ChatInput from "./ChatInput";
 import LogoGrid from "./LogoGrid";
 import ThinkingPanel from "./ThinkingPanel";
 import { useRefineStream } from "../hooks/useRefineStream";
+import { useMobile } from "../hooks/useMobile";
 import toast from "react-hot-toast";
 
 const FONTS: { value: FontFamily; label: string; style?: React.CSSProperties }[] = [
@@ -85,6 +86,7 @@ function HexInput({ value, onChange }: { value: string; onChange: (v: string) =>
 }
 
 export default function SvgEditor({ concept, brandName }: Props) {
+  const mobile = useMobile();
   const { stages: refineStages, logos: refined, isRefining, refine } = useRefineStream();
   const [refinedSel, setRefinedSel] = useState<number | null>(null);
   const [previewBg, setPreviewBg] = useState("#ffffff");
@@ -168,10 +170,10 @@ export default function SvgEditor({ concept, brandName }: Props) {
         </div>
 
         {/* Body */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 300px" }}>
+        <div className="editor-grid" style={{ display: "grid", gridTemplateColumns: mobile ? "1fr" : "1fr 300px", flexDirection: mobile ? "column-reverse" : undefined } as React.CSSProperties}>
 
           {/* Left: Controls */}
-          <div style={{ borderRight: "1px solid var(--border)", display: "flex", flexDirection: "column" }}>
+          <div style={{ borderRight: mobile ? "none" : "1px solid var(--border)", display: "flex", flexDirection: "column" }}>
 
             {/* Tabs */}
             <div style={{
@@ -209,7 +211,7 @@ export default function SvgEditor({ concept, brandName }: Props) {
                   {/* Palettes */}
                   <div>
                     <p className="lbl">Palettes suggérées</p>
-                    <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "0.5rem" }}>
+                    <div style={{ display: "grid", gridTemplateColumns: `repeat(${mobile ? 3 : 4}, 1fr)`, gap: "0.5rem" }}>
                       {PALETTES.map((p) => {
                         const isActive = ed.primaryColor === p.primary && ed.secondaryColor === p.secondary;
                         return (
@@ -379,7 +381,7 @@ export default function SvgEditor({ concept, brandName }: Props) {
 
                   <div>
                     <p className="lbl">Fond du logo</p>
-                    <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "0.5rem" }}>
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "0.375rem" }}>
                       {BG_OPTIONS.map((bg) => (
                         <button
                           key={bg.value}
@@ -414,11 +416,14 @@ export default function SvgEditor({ concept, brandName }: Props) {
             </div>
           </div>
 
-          {/* Right: Preview */}
+          {/* Right: Preview — order:−1 on mobile so it appears first */}
           <div style={{
             display: "flex", flexDirection: "column", alignItems: "center",
             gap: "1rem", padding: "1.5rem",
             background: "var(--subtle)",
+            order: mobile ? -1 : 0,
+            borderBottom: mobile ? "1px solid var(--border)" : "none",
+            borderRight: !mobile ? "none" : "none",
           }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
               <p className="lbl" style={{ margin: 0 }}>Aperçu en direct</p>

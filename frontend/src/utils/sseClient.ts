@@ -4,6 +4,7 @@ interface SSEHandlers {
   onLogo: (index: number, svg: string, description: string) => void;
   onDone: () => void;
   onError: (error: string) => void;
+  onMaintenance?: (message: string) => void;
 }
 
 export function createSSEConnection(
@@ -50,11 +51,12 @@ export function createSSEConnection(
           if (!eventType || !eventData) continue;
           try {
             const parsed = JSON.parse(eventData);
-            if (eventType === "stage")   handlers.onStage(parsed.id ?? "", parsed.label ?? "");
-            else if (eventType === "thinking") handlers.onThinking(parsed.text ?? "");
-            else if (eventType === "logo")     handlers.onLogo(parsed.index, parsed.svg, parsed.description);
-            else if (eventType === "done")     handlers.onDone();
-            else if (eventType === "error")    handlers.onError(parsed.message ?? "Unknown error");
+            if (eventType === "stage")        handlers.onStage(parsed.id ?? "", parsed.label ?? "");
+            else if (eventType === "thinking")    handlers.onThinking(parsed.text ?? "");
+            else if (eventType === "logo")        handlers.onLogo(parsed.index, parsed.svg, parsed.description);
+            else if (eventType === "done")        handlers.onDone();
+            else if (eventType === "error")       handlers.onError(parsed.message ?? "Unknown error");
+            else if (eventType === "maintenance") handlers.onMaintenance?.(parsed.message ?? "");
           } catch {
             // ignore malformed events
           }

@@ -2,12 +2,14 @@ import { useState, useCallback, useRef } from "react";
 import { createSSEConnection } from "../utils/sseClient";
 import type { LogoConcept, StageInfo } from "../types/logo";
 
+export type GenerateError = { type: "error" | "maintenance"; message: string } | null;
+
 export function useGenerateStream() {
   const [stages, setStages] = useState<StageInfo[]>([]);
   const [logos, setLogos] = useState<(LogoConcept | null)[]>([null, null, null, null]);
   const [isGenerating, setIsGenerating] = useState(false);
   const [isDone, setIsDone] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<GenerateError>(null);
   const cleanupRef = useRef<(() => void) | null>(null);
   // track current stage id to append thinking to correct stage
   const currentStageIdRef = useRef<string>("");
@@ -57,7 +59,8 @@ export function useGenerateStream() {
           setIsGenerating(false);
           setIsDone(true);
         },
-        onError: (err) => { setError(err); setIsGenerating(false); },
+        onMaintenance: (msg) => { setError({ type: "maintenance", message: msg }); setIsGenerating(false); },
+        onError: (err) => { setError({ type: "error", message: err }); setIsGenerating(false); },
       }
     );
   }, []);

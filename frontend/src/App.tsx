@@ -7,18 +7,29 @@ import DynamicForm from "./components/DynamicForm";
 import ThinkingPanel from "./components/ThinkingPanel";
 import LogoGrid from "./components/LogoGrid";
 import SvgEditor from "./components/SvgEditor";
+import FeedbackWidget from "./components/FeedbackWidget";
+import AdminPage from "./pages/AdminPage";
 import type { AppStep, LogoConcept } from "./types/logo";
 
+// ─── Router ────────────────────────────────────────────────────────────────────
 export default function App() {
+  if (window.location.pathname === "/admin237") {
+    return <AdminPage />;
+  }
+  return <MainApp />;
+}
+
+// ─── Main App ──────────────────────────────────────────────────────────────────
+function MainApp() {
   const [step, setStep] = useState<AppStep>("input");
   const [sel, setSel] = useState<number | null>(null);
 
   const { data: analyzed, isLoading: analyzing, analyze } = useAnalyze();
-  const { stages, logos, isGenerating, isDone, generate } = useGenerateStream();
+  const { stages, logos, isGenerating, isDone, error, generate } = useGenerateStream();
 
-  const formRef    = useRef<HTMLDivElement>(null);
-  const resultRef  = useRef<HTMLDivElement>(null);
-  const editorRef  = useRef<HTMLDivElement>(null);
+  const formRef   = useRef<HTMLDivElement>(null);
+  const resultRef = useRef<HTMLDivElement>(null);
+  const editorRef = useRef<HTMLDivElement>(null);
 
   function scrollTo(r: React.RefObject<HTMLDivElement | null>) {
     setTimeout(() => r.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 120);
@@ -41,6 +52,17 @@ export default function App() {
     if (isDone) { setStep("results"); toast.success("4 logos générés"); }
   }, [isDone]);
 
+  // Handle maintenance / errors
+  useEffect(() => {
+    if (!error) return;
+    if (error.type === "maintenance") {
+      setStep("input");
+    } else {
+      toast.error(error.message);
+      setStep("form");
+    }
+  }, [error]);
+
   function handleSelect(i: number) {
     setSel(i); setStep("editing"); scrollTo(editorRef);
   }
@@ -48,7 +70,7 @@ export default function App() {
   const concept: LogoConcept | null = sel !== null && logos[sel] ? logos[sel] : null;
   const brand = (analyzed?.extracted?.brand_name as string | null | undefined) ?? "Logo";
 
-  const showThinking = ["generating","results","editing"].includes(step);
+  const showThinking = ["generating", "results", "editing"].includes(step);
   const showGrid     = step === "results" || step === "editing" || (step === "generating" && logos.some(Boolean));
 
   return (
@@ -64,37 +86,21 @@ export default function App() {
       }}>
         <div style={{
           maxWidth: 980, margin: "0 auto",
-          padding: "0 1.5rem",
-          height: 56,
+          padding: "0 clamp(1rem, 4vw, 1.5rem)", height: 56,
           display: "flex", alignItems: "center", justifyContent: "space-between",
         }}>
-          {/* Wordmark */}
           <button
             type="button"
             onClick={() => { setStep("input"); setSel(null); }}
-            style={{
-              background: "none", border: "none", padding: 0, cursor: "pointer",
-              display: "flex", alignItems: "center", gap: "0.5rem",
-            }}
+            style={{ background: "none", border: "none", padding: 0, cursor: "pointer", display: "flex", alignItems: "center", gap: "0.5rem" }}
           >
-            <span style={{
-              fontSize: "0.9375rem",
-              fontWeight: 600,
-              letterSpacing: "-0.03em",
-              color: "var(--text-1)",
-              userSelect: "none",
-            }}>
+            <span style={{ fontSize: "0.9375rem", fontWeight: 600, letterSpacing: "-0.03em", color: "var(--text-1)", userSelect: "none" }}>
               Mboa Studio
             </span>
             <span style={{
-              fontSize: "0.6875rem",
-              fontWeight: 500,
-              letterSpacing: "0.04em",
-              color: "var(--text-3)",
-              background: "var(--subtle)",
-              border: "1px solid var(--border)",
-              borderRadius: "4px",
-              padding: "0.1rem 0.4rem",
+              fontSize: "0.6875rem", fontWeight: 500, letterSpacing: "0.04em",
+              color: "var(--text-3)", background: "var(--subtle)",
+              border: "1px solid var(--border)", borderRadius: "4px", padding: "0.1rem 0.4rem",
               textTransform: "uppercase",
             }}>
               Beta
@@ -106,19 +112,13 @@ export default function App() {
               type="button"
               onClick={() => { setStep("input"); setSel(null); }}
               style={{
-                background: "none",
-                border: "1px solid var(--border)",
-                borderRadius: "6px",
-                padding: "0.3125rem 0.875rem",
-                fontSize: "0.8125rem",
-                fontWeight: 500,
-                color: "var(--text-2)",
-                cursor: "pointer",
-                transition: "background 0.12s, border-color 0.12s",
-                letterSpacing: "-0.01em",
+                background: "none", border: "1px solid var(--border)", borderRadius: "6px",
+                padding: "0.3125rem 0.875rem", fontSize: "0.8125rem", fontWeight: 500,
+                color: "var(--text-2)", cursor: "pointer",
+                transition: "background 0.12s, border-color 0.12s", letterSpacing: "-0.01em",
               }}
-              onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = "var(--subtle)"; (e.currentTarget as HTMLButtonElement).style.borderColor = "var(--border-strong)"; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = "none"; (e.currentTarget as HTMLButtonElement).style.borderColor = "var(--border)"; }}
+              onMouseEnter={(e) => { const b = e.currentTarget; b.style.background = "var(--subtle)"; b.style.borderColor = "var(--border-strong)"; }}
+              onMouseLeave={(e) => { const b = e.currentTarget; b.style.background = "none"; b.style.borderColor = "var(--border)"; }}
             >
               Nouveau logo
             </button>
@@ -126,31 +126,34 @@ export default function App() {
         </div>
       </header>
 
+      {/* ── Maintenance banner ── */}
+      {error?.type === "maintenance" && (
+        <div style={{
+          background: "#fef9c3", borderBottom: "1px solid #fde047",
+          padding: "0.875rem 1.5rem",
+          display: "flex", alignItems: "center", justifyContent: "center", gap: "0.75rem",
+        }}>
+          <span style={{ fontSize: "1rem" }}>🔧</span>
+          <p style={{ margin: 0, fontSize: "0.9rem", color: "#854d0e", fontWeight: 500 }}>
+            {error.message}
+          </p>
+        </div>
+      )}
+
       {/* ── Main ── */}
-      <main style={{ flex: 1, maxWidth: 980, margin: "0 auto", width: "100%", padding: "3.5rem 1.5rem 6rem", display: "flex", flexDirection: "column", gap: "2.5rem" }}>
+      <main style={{ flex: 1, maxWidth: 980, margin: "0 auto", width: "100%", padding: "clamp(1.5rem, 5vw, 3.5rem) clamp(1rem, 4vw, 1.5rem) 6rem", display: "flex", flexDirection: "column", gap: "clamp(1.5rem, 4vw, 2.5rem)" }}>
 
         {/* Step 1 — Input */}
         {step === "input" && (
           <div className="in" style={{ display: "flex", flexDirection: "column", gap: "2.75rem" }}>
-            {/* Hero */}
             <div style={{ paddingTop: "0.5rem" }}>
               <h1 style={{
-                fontSize: "clamp(2rem, 5.5vw, 2.875rem)",
-                fontWeight: 700,
-                letterSpacing: "-0.045em",
-                lineHeight: 1.12,
-                color: "var(--text-1)",
-                marginBottom: "1rem",
+                fontSize: "clamp(2rem, 5.5vw, 2.875rem)", fontWeight: 700,
+                letterSpacing: "-0.045em", lineHeight: 1.12, color: "var(--text-1)", marginBottom: "1rem",
               }}>
                 Créez votre logo<br />avec l'IA
               </h1>
-              <p style={{
-                fontSize: "1rem",
-                color: "var(--text-2)",
-                maxWidth: 480,
-                lineHeight: 1.65,
-                letterSpacing: "-0.01em",
-              }}>
+              <p style={{ fontSize: "1rem", color: "var(--text-2)", maxWidth: 480, lineHeight: 1.65, letterSpacing: "-0.01em" }}>
                 Décrivez votre marque en langage naturel. L'IA analyse, raisonne à voix haute, et génère 4 concepts SVG uniques.
               </p>
             </div>
@@ -163,12 +166,11 @@ export default function App() {
               minRows={6}
             />
 
-            {/* Feature list */}
             <div style={{ display: "flex", gap: "2.5rem", flexWrap: "wrap", paddingTop: "0.25rem" }}>
               {[
-                ["Langage naturel", "Écrivez librement, dans votre langue"],
-                ["Raisonnement visible", "L'IA explique chaque décision design"],
-                ["4 concepts SVG", "Éditables, exportables en SVG et PNG"],
+                ["Langage naturel",    "Écrivez librement, dans votre langue"],
+                ["Raisonnement visible","L'IA explique chaque décision design"],
+                ["4 concepts SVG",     "Éditables, exportables en SVG et PNG"],
               ].map(([t, d]) => (
                 <div key={t} style={{ flex: "1 1 150px" }}>
                   <p style={{ fontSize: "0.8125rem", fontWeight: 600, color: "var(--text-1)", marginBottom: "0.25rem", letterSpacing: "-0.015em" }}>{t}</p>
@@ -186,7 +188,7 @@ export default function App() {
           </div>
         )}
 
-        {/* Confirmed badge */}
+        {/* Brief confirmed badge */}
         {analyzed && step !== "form" && step !== "input" && (
           <div ref={formRef} className="in" style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.625rem 0" }}>
             <svg width="12" height="12" viewBox="0 0 10 10" fill="none">
@@ -221,27 +223,20 @@ export default function App() {
       {/* ── Footer ── */}
       <footer style={{ borderTop: "1px solid rgba(0,0,0,0.05)", background: "var(--bg)" }}>
         <div style={{
-          maxWidth: 980, margin: "0 auto",
-          padding: "1.375rem 1.5rem",
+          maxWidth: 980, margin: "0 auto", padding: "1.375rem 1.5rem",
           display: "flex", alignItems: "center", justifyContent: "space-between",
         }}>
-          <span style={{
-            fontSize: "0.8125rem",
-            fontWeight: 600,
-            letterSpacing: "-0.025em",
-            color: "var(--text-1)",
-          }}>
+          <span style={{ fontSize: "0.8125rem", fontWeight: 600, letterSpacing: "-0.025em", color: "var(--text-1)" }}>
             Mboa Studio
           </span>
-          <span style={{
-            fontSize: "0.75rem",
-            color: "var(--text-3)",
-            letterSpacing: "-0.01em",
-          }}>
+          <span style={{ fontSize: "0.75rem", color: "var(--text-3)", letterSpacing: "-0.01em" }}>
             Built by Brandon Kamga
           </span>
         </div>
       </footer>
+
+      {/* ── Floating feedback widget ── */}
+      <FeedbackWidget />
     </div>
   );
 }
