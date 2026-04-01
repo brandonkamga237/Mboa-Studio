@@ -127,7 +127,7 @@ function DailyChart({ data }: { data: Record<string, number> }) {
 
 // ─── Views ────────────────────────────────────────────────────────────────────
 
-function OverviewView({ analytics, feedbackSummary, config, onRefresh }: {
+function OverviewView({ analytics, feedbackSummary, config }: {
   analytics: AnalyticsData;
   feedbackSummary: { total: number; average_rating: number };
   config: Config;
