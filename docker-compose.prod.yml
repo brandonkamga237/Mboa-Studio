@@ -1,0 +1,39 @@
+services:
+  backend:
+    image: brandoniscoding/mboa-studio-backend:latest
+    restart: unless-stopped
+    env_file: ./backend/.env
+    volumes:
+      - backend_data:/app/data
+    networks:
+      - mboa-internal
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  frontend:
+    image: brandoniscoding/mboa-studio-frontend:latest
+    restart: unless-stopped
+    networks:
+      - mboa-internal
+      - traefik-public
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.mboa-studio.rule=Host(`mboastudio.brandonkamga.com`)"
+      - "traefik.http.routers.mboa-studio.entrypoints=websecure"
+      - "traefik.http.routers.mboa-studio.tls.certresolver=le"
+      - "traefik.http.services.mboa-studio.loadbalancer.server.port=80"
+      - "traefik.docker.network=traefik-public"
+    depends_on:
+      - backend
+
+volumes:
+  backend_data:
+
+networks:
+  mboa-internal:
+    driver: bridge
+  traefik-public:
+    external: true

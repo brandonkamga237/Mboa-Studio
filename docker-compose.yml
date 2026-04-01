@@ -5,9 +5,7 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8000:8000"
-    environment:
-      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
-      - CLAUDE_MODEL=${CLAUDE_MODEL:-claude-opus-4-6}
+    env_file: ./backend/.env
     volumes:
       - ./backend/templates:/app/templates:ro
     restart: unless-stopped
