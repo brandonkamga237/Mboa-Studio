@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { margin: 0; padding: 20px; background: var(--bg-page); font-family: var(--font-body); }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 12px; }
+  .pill {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 3px 10px; border-radius: var(--radius-pill);
+    font-size: var(--text-xs); font-weight: var(--weight-semibold);
+    line-height: 1.4;
+  }
+  .dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+  .count-badge {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: 18px; height: 18px; padding: 0 5px;
+    border-radius: var(--radius-pill); font-size: 10px; font-weight: 700;
+  }
+  .role-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 2px 8px; border-radius: var(--radius-sm);
+    font-size: var(--text-xs); font-weight: var(--weight-semibold);
+    letter-spacing: 0.03em; text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+<!-- Status pills -->
+<div class="row">
+  <span class="pill" style="background:#E5E7EB;color:#6B7280"><span class="dot" style="background:#9CA3AF"></span>Créé</span>
+  <span class="pill" style="background:#FDE68A;color:#92400E"><span class="dot" style="background:#D97706"></span>Candidat final</span>
+  <span class="pill" style="background:#BBF7D0;color:#14532D"><span class="dot" style="background:#15803D"></span>Officiel</span>
+  <span class="pill" style="background:#F3F4F6;color:#9CA3AF"><span class="dot" style="background:#D1D5DB"></span>Archivé</span>
+</div>
+<!-- Comment count badges -->
+<div class="row">
+  <span style="font-size:12px;color:var(--fg-secondary)">Commentaires :</span>
+  <span class="count-badge" style="background:#FDE68A;color:#92400E">3</span>
+  <span class="count-badge" style="background:#E5E7EB;color:#6B7280">0</span>
+  <span class="count-badge" style="background:#BBF7D0;color:#14532D">✓</span>
+</div>
+<!-- Role badges -->
+<div class="row">
+  <span class="role-badge" style="background:var(--brand-gold-pale);color:#92400E">Moniteur</span>
+  <span class="role-badge" style="background:#DBEAFE;color:#1E40AF">Responsable</span>
+  <span class="role-badge" style="background:#EDE9FE;color:#5B21B6">Admin</span>
+</div>
+</body>
+</html>

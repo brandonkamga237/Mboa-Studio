@@ -1,24 +1,26 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-import { Toaster } from "react-hot-toast";
-import App from "./App";
-import "./index.css";
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { Toaster } from 'react-hot-toast';
+import App from './App';
+import './index.css';
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
+ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <Toaster
       position="top-right"
       toastOptions={{
         style: {
-          background: "#ffffff",
-          color: "#1a1a1a",
-          border: "1px solid #e5e5e5",
-          borderRadius: "10px",
-          fontSize: "0.875rem",
-          boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+          background: '#FDFAF7',
+          color: '#1E2D4A',
+          border: '1px solid #D1C9BE',
+          borderRadius: '6px',
+          fontSize: '13px',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.10)',
+          fontFamily: 'Source Sans 3, sans-serif',
         },
-        success: { iconTheme: { primary: "#0f0f0f", secondary: "#ffffff" } },
-        error: { iconTheme: { primary: "#dc2626", secondary: "#ffffff" } },
+        success: { iconTheme: { primary: '#15803D', secondary: '#FDFAF7' } },
+        error:   { iconTheme: { primary: '#DC2626', secondary: '#FDFAF7' } },
+        duration: 3000,
       }}
     />
     <App />

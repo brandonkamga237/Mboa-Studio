@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { margin: 0; padding: 20px; background: var(--bg-page); font-family: var(--font-body); }
+  .stack { display: flex; flex-direction: column; gap: 12px; max-width: 380px; }
+  .field { display: flex; flex-direction: column; gap: 4px; }
+  label { font-size: var(--text-sm); font-weight: var(--weight-semibold); color: var(--fg-primary); }
+  .input {
+    padding: 8px 12px; border-radius: var(--radius-md);
+    border: 1px solid var(--border-medium); background: var(--bg-input);
+    font-family: var(--font-body); font-size: var(--text-base);
+    color: var(--fg-primary); outline: none;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+    width: 100%;
+  }
+  .input:focus { border-color: var(--border-focus); box-shadow: 0 0 0 3px rgba(43,76,126,0.12); }
+  .input-error { border-color: #DC2626; }
+  .input-error:focus { box-shadow: 0 0 0 3px rgba(220,38,38,0.12); }
+  .hint { font-size: var(--text-xs); color: var(--fg-muted); }
+  .error-msg { font-size: var(--text-xs); color: #DC2626; }
+  select.input { cursor: pointer; }
+</style>
+</head>
+<body>
+<div class="stack">
+  <div class="field">
+    <label>Titre du chant</label>
+    <input class="input" type="text" value="Saint, Saint, Saint" placeholder="Nom du chant…">
+  </div>
+  <div class="field">
+    <label>Étape liturgique</label>
+    <select class="input">
+      <option>Salutation</option>
+      <option selected>Adoration</option>
+      <option>Prière de repentance</option>
+      <option>Parole de grâce</option>
+      <option>Loi</option>
+      <option>Leçon</option>
+      <option>Confession de foi</option>
+      <option>Offrande 1</option>
+      <option>Offrande 2</option>
+      <option>Sortie</option>
+    </select>
+  </div>
+  <div class="field">
+    <label>Recherche</label>
+    <input class="input" type="text" placeholder="Chercher dans l'historique…">
+    <span class="hint">Par date, chant, leçon ou auteur</span>
+  </div>
+  <div class="field">
+    <label>Email</label>
+    <input class="input input-error" type="email" value="marie@">
+    <span class="error-msg">Adresse email invalide.</span>
+  </div>
+</div>
+</body>
+</html>

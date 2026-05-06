@@ -1,242 +1,75 @@
-import { useRef, useEffect, useState } from "react";
-import toast from "react-hot-toast";
-import { useAnalyze } from "./hooks/useAnalyze";
-import { useGenerateStream } from "./hooks/useGenerateStream";
-import ChatInput from "./components/ChatInput";
-import DynamicForm from "./components/DynamicForm";
-import ThinkingPanel from "./components/ThinkingPanel";
-import LogoGrid from "./components/LogoGrid";
-import SvgEditor from "./components/SvgEditor";
-import FeedbackWidget from "./components/FeedbackWidget";
-import AdminPage from "./pages/AdminPage";
-import type { AppStep, LogoConcept } from "./types/logo";
+import { useEffect } from 'react';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { useAuthStore } from './store/auth';
+import { Spinner } from './components/ui/Spinner';
+import AppShell from './components/layout/AppShell';
+import LoginPage from './pages/LoginPage';
+import DashboardPage from './pages/DashboardPage';
+import BrouillonListPage from './pages/BrouillonListPage';
+import BrouillonDetailPage from './pages/BrouillonDetailPage';
+import HistoriquePage from './pages/HistoriquePage';
+import PresencePage from './pages/PresencePage';
+import AdminPage from './pages/AdminPage';
 
-// ─── Router ────────────────────────────────────────────────────────────────────
-export default function App() {
-  if (window.location.pathname === "/admin237") {
-    return <AdminPage />;
-  }
-  return <MainApp />;
+function RequireAuth({ children }: { children: React.ReactNode }) {
+  const { token, user, loading } = useAuthStore();
+  if (!token) return <Navigate to="/connexion" replace />;
+  if (loading || !user) return (
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100dvh', gap: 12 }}>
+      <Spinner size={28} />
+      <span style={{ fontSize: 13, color: 'var(--fg-muted)' }}>Chargement…</span>
+    </div>
+  );
+  return <>{children}</>;
 }
 
-// ─── Main App ──────────────────────────────────────────────────────────────────
-function MainApp() {
-  const [step, setStep] = useState<AppStep>("input");
-  const [sel, setSel] = useState<number | null>(null);
-
-  const { data: analyzed, isLoading: analyzing, analyze } = useAnalyze();
-  const { stages, logos, isGenerating, isDone, error, generate } = useGenerateStream();
-
-  const formRef   = useRef<HTMLDivElement>(null);
-  const resultRef = useRef<HTMLDivElement>(null);
-  const editorRef = useRef<HTMLDivElement>(null);
-
-  function scrollTo(r: React.RefObject<HTMLDivElement | null>) {
-    setTimeout(() => r.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 120);
+function RequireResp({ children }: { children: React.ReactNode }) {
+  const { user } = useAuthStore();
+  if (user?.role !== 'responsable' && user?.role !== 'admin') {
+    return <Navigate to="/tableau-de-bord" replace />;
   }
+  return <>{children}</>;
+}
 
-  async function handleChat(text: string) {
-    setStep("form"); setSel(null);
-    await analyze(text);
-  }
+function RequireAdmin({ children }: { children: React.ReactNode }) {
+  const { user } = useAuthStore();
+  if (user?.role !== 'admin') return <Navigate to="/tableau-de-bord" replace />;
+  return <>{children}</>;
+}
 
-  useEffect(() => { if (analyzed) scrollTo(formRef); }, [analyzed]);
-
-  function handleConfirm(form: Record<string, string>) {
-    setStep("generating"); setSel(null);
-    scrollTo(resultRef);
-    generate(form);
-  }
+export default function App() {
+  const { token, loadMe } = useAuthStore();
 
   useEffect(() => {
-    if (isDone) { setStep("results"); toast.success("4 logos générés"); }
-  }, [isDone]);
-
-  // Handle maintenance / errors
-  useEffect(() => {
-    if (!error) return;
-    if (error.type === "maintenance") {
-      setStep("input");
-    } else {
-      toast.error(error.message);
-      setStep("form");
-    }
-  }, [error]);
-
-  function handleSelect(i: number) {
-    setSel(i); setStep("editing"); scrollTo(editorRef);
-  }
-
-  const concept: LogoConcept | null = sel !== null && logos[sel] ? logos[sel] : null;
-  const brand = (analyzed?.extracted?.brand_name as string | null | undefined) ?? "Logo";
-
-  const showThinking = ["generating", "results", "editing"].includes(step);
-  const showGrid     = step === "results" || step === "editing" || (step === "generating" && logos.some(Boolean));
+    if (token) loadMe();
+  }, [token]);
 
   return (
-    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", background: "var(--bg)" }}>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/connexion" element={<LoginPage />} />
 
-      {/* ── Header ── */}
-      <header style={{
-        position: "sticky", top: 0, zIndex: 20,
-        background: "rgba(250,250,249,0.85)",
-        backdropFilter: "blur(20px) saturate(1.8)",
-        WebkitBackdropFilter: "blur(20px) saturate(1.8)",
-        borderBottom: "1px solid rgba(0,0,0,0.06)",
-      }}>
-        <div style={{
-          maxWidth: 980, margin: "0 auto",
-          padding: "0 clamp(1rem, 4vw, 1.5rem)", height: 56,
-          display: "flex", alignItems: "center", justifyContent: "space-between",
-        }}>
-          <button
-            type="button"
-            onClick={() => { setStep("input"); setSel(null); }}
-            style={{ background: "none", border: "none", padding: 0, cursor: "pointer", display: "flex", alignItems: "center", gap: "0.5rem" }}
-          >
-            <span style={{ fontSize: "0.9375rem", fontWeight: 600, letterSpacing: "-0.03em", color: "var(--text-1)", userSelect: "none" }}>
-              Mboa Studio
-            </span>
-            <span style={{
-              fontSize: "0.6875rem", fontWeight: 500, letterSpacing: "0.04em",
-              color: "var(--text-3)", background: "var(--subtle)",
-              border: "1px solid var(--border)", borderRadius: "4px", padding: "0.1rem 0.4rem",
-              textTransform: "uppercase",
-            }}>
-              Beta
-            </span>
-          </button>
+        <Route element={
+          <RequireAuth>
+            <AppShell />
+          </RequireAuth>
+        }>
+          <Route path="/tableau-de-bord" element={<DashboardPage />} />
+          <Route path="/mes-brouillons" element={<BrouillonListPage mineOnly />} />
+          <Route path="/brouillons" element={<BrouillonListPage />} />
+          <Route path="/brouillons/:id" element={<BrouillonDetailPage />} />
+          <Route path="/historique" element={<HistoriquePage />} />
+          <Route path="/presence" element={
+            <RequireResp><PresencePage /></RequireResp>
+          } />
+          <Route path="/admin" element={
+            <RequireAdmin><AdminPage /></RequireAdmin>
+          } />
+        </Route>
 
-          {step !== "input" && (
-            <button
-              type="button"
-              onClick={() => { setStep("input"); setSel(null); }}
-              style={{
-                background: "none", border: "1px solid var(--border)", borderRadius: "6px",
-                padding: "0.3125rem 0.875rem", fontSize: "0.8125rem", fontWeight: 500,
-                color: "var(--text-2)", cursor: "pointer",
-                transition: "background 0.12s, border-color 0.12s", letterSpacing: "-0.01em",
-              }}
-              onMouseEnter={(e) => { const b = e.currentTarget; b.style.background = "var(--subtle)"; b.style.borderColor = "var(--border-strong)"; }}
-              onMouseLeave={(e) => { const b = e.currentTarget; b.style.background = "none"; b.style.borderColor = "var(--border)"; }}
-            >
-              Nouveau logo
-            </button>
-          )}
-        </div>
-      </header>
-
-      {/* ── Maintenance banner ── */}
-      {error?.type === "maintenance" && (
-        <div style={{
-          background: "#fef9c3", borderBottom: "1px solid #fde047",
-          padding: "0.875rem 1.5rem",
-          display: "flex", alignItems: "center", justifyContent: "center", gap: "0.75rem",
-        }}>
-          <span style={{ fontSize: "1rem" }}>🔧</span>
-          <p style={{ margin: 0, fontSize: "0.9rem", color: "#854d0e", fontWeight: 500 }}>
-            {error.message}
-          </p>
-        </div>
-      )}
-
-      {/* ── Main ── */}
-      <main style={{ flex: 1, maxWidth: 980, margin: "0 auto", width: "100%", padding: "clamp(1.5rem, 5vw, 3.5rem) clamp(1rem, 4vw, 1.5rem) 6rem", display: "flex", flexDirection: "column", gap: "clamp(1.5rem, 4vw, 2.5rem)" }}>
-
-        {/* Step 1 — Input */}
-        {step === "input" && (
-          <div className="in" style={{ display: "flex", flexDirection: "column", gap: "2.75rem" }}>
-            <div style={{ paddingTop: "0.5rem" }}>
-              <h1 style={{
-                fontSize: "clamp(2rem, 5.5vw, 2.875rem)", fontWeight: 700,
-                letterSpacing: "-0.045em", lineHeight: 1.12, color: "var(--text-1)", marginBottom: "1rem",
-              }}>
-                Créez votre logo<br />avec l'IA
-              </h1>
-              <p style={{ fontSize: "1rem", color: "var(--text-2)", maxWidth: 480, lineHeight: 1.65, letterSpacing: "-0.01em" }}>
-                Décrivez votre marque en langage naturel. L'IA analyse, raisonne à voix haute, et génère 4 concepts SVG uniques.
-              </p>
-            </div>
-
-            <ChatInput
-              onSubmit={handleChat}
-              isLoading={analyzing}
-              placeholder="Décrivez votre marque... Ex: Je lance une startup de paiement mobile en Afrique appelée NkwaPay, je veux quelque chose de moderne et de confiance"
-              buttonText="Créer mon logo"
-              minRows={6}
-            />
-
-            <div style={{ display: "flex", gap: "2.5rem", flexWrap: "wrap", paddingTop: "0.25rem" }}>
-              {[
-                ["Langage naturel",    "Écrivez librement, dans votre langue"],
-                ["Raisonnement visible","L'IA explique chaque décision design"],
-                ["4 concepts SVG",     "Éditables, exportables en SVG et PNG"],
-              ].map(([t, d]) => (
-                <div key={t} style={{ flex: "1 1 150px" }}>
-                  <p style={{ fontSize: "0.8125rem", fontWeight: 600, color: "var(--text-1)", marginBottom: "0.25rem", letterSpacing: "-0.015em" }}>{t}</p>
-                  <p style={{ fontSize: "0.8125rem", color: "var(--text-3)", lineHeight: 1.55 }}>{d}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Step 2 — Form */}
-        {analyzed && step === "form" && (
-          <div ref={formRef}>
-            <DynamicForm analysis={analyzed} onConfirm={handleConfirm} isLoading={isGenerating} />
-          </div>
-        )}
-
-        {/* Brief confirmed badge */}
-        {analyzed && step !== "form" && step !== "input" && (
-          <div ref={formRef} className="in" style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.625rem 0" }}>
-            <svg width="12" height="12" viewBox="0 0 10 10" fill="none">
-              <path d="M1.5 5l2.5 2.5 4.5-4.5" stroke="var(--success)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-            <span style={{ fontSize: "0.8125rem", color: "var(--text-3)" }}>
-              <strong style={{ color: "var(--text-2)", fontWeight: 500 }}>{brand}</strong> — brief confirmé
-            </span>
-          </div>
-        )}
-
-        {/* Step 3 — Thinking */}
-        {showThinking && (
-          <div ref={resultRef}>
-            <ThinkingPanel stages={stages} isStreaming={isGenerating} />
-          </div>
-        )}
-
-        {/* Step 4 — Grid */}
-        {showGrid && (
-          <LogoGrid logos={logos} selectedIndex={sel} onSelect={handleSelect} />
-        )}
-
-        {/* Step 5 — Editor */}
-        {concept && (
-          <div ref={editorRef}>
-            <SvgEditor concept={concept} brandName={brand} />
-          </div>
-        )}
-      </main>
-
-      {/* ── Footer ── */}
-      <footer style={{ borderTop: "1px solid rgba(0,0,0,0.05)", background: "var(--bg)" }}>
-        <div style={{
-          maxWidth: 980, margin: "0 auto", padding: "1.375rem 1.5rem",
-          display: "flex", alignItems: "center", justifyContent: "space-between",
-        }}>
-          <span style={{ fontSize: "0.8125rem", fontWeight: 600, letterSpacing: "-0.025em", color: "var(--text-1)" }}>
-            Mboa Studio
-          </span>
-          <span style={{ fontSize: "0.75rem", color: "var(--text-3)", letterSpacing: "-0.01em" }}>
-            Built by Brandon Kamga
-          </span>
-        </div>
-      </footer>
-
-      {/* ── Floating feedback widget ── */}
-      <FeedbackWidget />
-    </div>
+        <Route path="/" element={<Navigate to="/tableau-de-bord" replace />} />
+        <Route path="*" element={<Navigate to="/tableau-de-bord" replace />} />
+      </Routes>
+    </BrowserRouter>
   );
 }

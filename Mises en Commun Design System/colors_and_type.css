@@ -1,0 +1,236 @@
+/* ============================================================
+   Mises en Commun — Design Tokens
+   colors_and_type.css
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Source+Sans+3:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap');
+
+/* ─── Raw Brand Colors ────────────────────────────────────── */
+:root {
+  --brand-navy:        #1E2D4A;
+  --brand-navy-light:  #2B3F62;
+  --brand-navy-deep:   #141E33;
+  --brand-blue:        #2B4C7E;
+  --brand-blue-light:  #3D6399;
+  --brand-gold:        #C9952A;
+  --brand-gold-light:  #DDB04A;
+  --brand-gold-pale:   #F5E9C8;
+  --brand-cream:       #F7F3EE;
+  --brand-warm-white:  #FDFAF7;
+  --brand-stone:       #E8E2D9;
+  --brand-stone-dark:  #D1C9BE;
+
+  /* ─── Status Colors ─────────────────────────────────────── */
+  --status-draft-bg:        #F3F4F6;
+  --status-draft-border:    #9CA3AF;
+  --status-draft-text:      #6B7280;
+
+  --status-candidate-bg:    #FFFBEB;
+  --status-candidate-border:#D97706;
+  --status-candidate-text:  #92400E;
+
+  --status-official-bg:     #F0FDF4;
+  --status-official-border: #15803D;
+  --status-official-text:   #14532D;
+
+  --status-archived-bg:     #F9FAFB;
+  --status-archived-border: #D1D5DB;
+  --status-archived-text:   #9CA3AF;
+
+  /* ─── Semantic Foreground ───────────────────────────────── */
+  --fg-primary:    #1E2D4A;
+  --fg-secondary:  #4B5563;
+  --fg-muted:      #9CA3AF;
+  --fg-inverse:    #FDFAF7;
+  --fg-link:       #2B4C7E;
+  --fg-link-hover: #1E2D4A;
+
+  /* ─── Semantic Background ───────────────────────────────── */
+  --bg-page:       #F7F3EE;
+  --bg-card:       #FDFAF7;
+  --bg-sidebar:    #1E2D4A;
+  --bg-sidebar-hover: rgba(255,255,255,0.08);
+  --bg-sidebar-active: rgba(255,255,255,0.14);
+  --bg-input:      #FFFFFF;
+  --bg-input-focus:#FFFFFF;
+  --bg-overlay:    rgba(30,45,74,0.4);
+
+  /* ─── Borders ───────────────────────────────────────────── */
+  --border-subtle: #E8E2D9;
+  --border-medium: #D1C9BE;
+  --border-strong: #9CA3AF;
+  --border-focus:  #2B4C7E;
+
+  /* ─── Shadows ───────────────────────────────────────────── */
+  --shadow-card:    0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-raised:  0 4px 12px rgba(0,0,0,0.10), 0 1px 3px rgba(0,0,0,0.06);
+  --shadow-overlay: 0 8px 32px rgba(0,0,0,0.14), 0 2px 8px rgba(0,0,0,0.08);
+
+  /* ─── Border Radii ──────────────────────────────────────── */
+  --radius-sm:   4px;
+  --radius-md:   6px;
+  --radius-lg:   8px;
+  --radius-xl:   12px;
+  --radius-pill: 999px;
+
+  /* ─── Spacing Scale ─────────────────────────────────────── */
+  --space-1:   4px;
+  --space-2:   8px;
+  --space-3:   12px;
+  --space-4:   16px;
+  --space-5:   20px;
+  --space-6:   24px;
+  --space-8:   32px;
+  --space-10:  40px;
+  --space-12:  48px;
+  --space-16:  64px;
+
+  /* ─── Layout ────────────────────────────────────────────── */
+  --sidebar-width:      240px;
+  --content-max-width:  720px;
+  --card-padding:       20px;
+
+  /* ─── Transitions ───────────────────────────────────────── */
+  --transition-fast:   150ms ease;
+  --transition-base:   200ms ease;
+  --transition-slow:   300ms ease;
+
+  /* ─── Typography — Font Families ────────────────────────── */
+  --font-display: 'Lora', Georgia, 'Times New Roman', serif;
+  --font-body:    'Source Sans 3', 'Helvetica Neue', Arial, sans-serif;
+  --font-mono:    'JetBrains Mono', 'Courier New', monospace;
+
+  /* ─── Typography — Font Sizes ───────────────────────────── */
+  --text-xs:   11px;
+  --text-sm:   13px;
+  --text-base: 15px;
+  --text-md:   16px;
+  --text-lg:   18px;
+  --text-xl:   20px;
+  --text-2xl:  24px;
+  --text-3xl:  30px;
+  --text-4xl:  36px;
+
+  /* ─── Typography — Line Heights ─────────────────────────── */
+  --leading-tight:  1.25;
+  --leading-snug:   1.375;
+  --leading-base:   1.5;
+  --leading-relaxed:1.65;
+
+  /* ─── Typography — Font Weights ─────────────────────────── */
+  --weight-light:    300;
+  --weight-regular:  400;
+  --weight-medium:   500;
+  --weight-semibold: 600;
+  --weight-bold:     700;
+}
+
+/* ─── Semantic Typographic Roles ────────────────────────────── */
+
+/* Page-level display heading (e.g. section name in PDF, hero) */
+.t-display {
+  font-family: var(--font-display);
+  font-size: var(--text-4xl);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-tight);
+  color: var(--fg-primary);
+}
+
+/* Section headings (h1 equivalent in app) */
+.t-h1 {
+  font-family: var(--font-display);
+  font-size: var(--text-3xl);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-tight);
+  color: var(--fg-primary);
+}
+
+/* Card/panel headings (h2) */
+.t-h2 {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-snug);
+  color: var(--fg-primary);
+}
+
+/* Sub-section headings (h3) */
+.t-h3 {
+  font-family: var(--font-body);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-snug);
+  color: var(--fg-primary);
+}
+
+/* Label / nav / small heading */
+.t-label {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-tight);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--fg-secondary);
+}
+
+/* Standard body text */
+.t-body {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  font-weight: var(--weight-regular);
+  line-height: var(--leading-relaxed);
+  color: var(--fg-primary);
+}
+
+/* Slightly smaller body (secondary info) */
+.t-body-sm {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-regular);
+  line-height: var(--leading-base);
+  color: var(--fg-secondary);
+}
+
+/* Muted metadata: timestamps, counts */
+.t-meta {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-regular);
+  line-height: var(--leading-base);
+  color: var(--fg-muted);
+}
+
+/* Monospace / admin / data */
+.t-mono {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-regular);
+  line-height: var(--leading-base);
+  color: var(--fg-secondary);
+}
+
+/* ─── Base Resets ────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
+  color: var(--fg-primary);
+  background-color: var(--bg-page);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: var(--fg-link);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+a:hover {
+  color: var(--fg-link-hover);
+  text-decoration: underline;
+}

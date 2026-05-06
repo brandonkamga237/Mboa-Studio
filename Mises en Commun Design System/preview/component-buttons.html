@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { margin: 0; padding: 20px; background: var(--bg-page); font-family: var(--font-body); }
+  .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 16px; border-radius: var(--radius-md);
+    font-family: var(--font-body); font-size: var(--text-sm);
+    font-weight: var(--weight-semibold); border: none; cursor: pointer;
+    transition: background var(--transition-fast), transform var(--transition-fast);
+    text-decoration: none; line-height: 1;
+  }
+  .btn:hover { transform: none; }
+  .btn-primary { background: var(--brand-navy); color: var(--fg-inverse); }
+  .btn-primary:hover { background: var(--brand-navy-deep); }
+  .btn-secondary { background: var(--bg-card); color: var(--fg-primary); border: 1px solid var(--border-medium); }
+  .btn-secondary:hover { background: var(--brand-stone); }
+  .btn-gold { background: var(--brand-gold); color: white; }
+  .btn-gold:hover { background: #b8841f; }
+  .btn-ghost { background: transparent; color: var(--fg-link); border: 1px solid transparent; }
+  .btn-ghost:hover { background: var(--brand-stone); }
+  .btn-danger { background: #DC2626; color: white; }
+  .btn-danger:hover { background: #B91C1C; }
+  .btn-sm { padding: 5px 10px; font-size: var(--text-xs); }
+  .btn-lg { padding: 12px 24px; font-size: var(--text-base); }
+  .btn-disabled { opacity: 0.45; cursor: not-allowed; }
+  .divider { width: 100%; height: 1px; background: var(--border-subtle); margin: 8px 0; }
+</style>
+</head>
+<body>
+<div class="row">
+  <button class="btn btn-primary">Créer un brouillon</button>
+  <button class="btn btn-secondary">Voir les brouillons</button>
+  <button class="btn btn-gold">Désigner comme officiel</button>
+  <button class="btn btn-ghost">Voir l'historique</button>
+  <button class="btn btn-danger">Supprimer</button>
+</div>
+<div class="divider"></div>
+<div class="row">
+  <button class="btn btn-primary btn-sm">Valider</button>
+  <button class="btn btn-secondary btn-sm">Annuler</button>
+  <button class="btn btn-primary btn-lg">Télécharger le PDF</button>
+  <button class="btn btn-primary btn-disabled" disabled>Soumettre</button>
+</div>
+</body>
+</html>

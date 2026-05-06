@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { margin: 0; padding: 0; background: var(--bg-page); font-family: var(--font-body); }
+  .sidebar {
+    width: 220px; background: var(--bg-sidebar);
+    height: 340px; display: flex; flex-direction: column;
+    padding: 16px 0;
+  }
+  .logo-area { padding: 0 16px 16px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 8px; }
+  .logo-text { font-family: var(--font-display); font-size: 15px; font-weight: 600; color: #FDFAF7; }
+  .logo-sub { font-size: 10px; color: rgba(255,255,255,0.4); letter-spacing: 0.06em; text-transform: uppercase; margin-top: 2px; }
+  .section-label { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.35); padding: 8px 16px 4px; }
+  .nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 16px; cursor: pointer;
+    font-size: var(--text-sm); color: rgba(255,255,255,0.7);
+    transition: background var(--transition-fast), color var(--transition-fast);
+    border-radius: 0;
+  }
+  .nav-item:hover { background: var(--bg-sidebar-hover); color: #FDFAF7; }
+  .nav-item.active { background: var(--bg-sidebar-active); color: #FDFAF7; font-weight: 600; }
+  .nav-icon { width: 16px; height: 16px; opacity: 0.7; flex-shrink: 0; }
+  .nav-item.active .nav-icon { opacity: 1; }
+  .badge { margin-left: auto; background: var(--brand-gold); color: white; font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: var(--radius-pill); }
+  .spacer { flex: 1; }
+  .user-area { padding: 12px 16px 0; border-top: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 8px; }
+  .avatar { width: 26px; height: 26px; border-radius: 50%; background: var(--brand-gold); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: white; }
+  .user-name { font-size: var(--text-sm); color: rgba(255,255,255,0.8); }
+  .user-role { font-size: 10px; color: rgba(255,255,255,0.4); }
+</style>
+</head>
+<body>
+<div class="sidebar">
+  <div class="logo-area">
+    <div class="logo-text">Mises en Commun</div>
+    <div class="logo-sub">Culte d'enfants</div>
+  </div>
+  <div class="nav-item active">
+    <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/><rect x="1" y="9" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/></svg>
+    Tableau de bord
+  </div>
+  <div class="nav-item">
+    <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 2h10a1 1 0 011 1v10a1 1 0 01-1 1H3a1 1 0 01-1-1V3a1 1 0 011-1z"/><line x1="5" y1="6" x2="11" y2="6"/><line x1="5" y1="9" x2="8" y2="9"/></svg>
+    Mes brouillons
+    <span class="badge">2</span>
+  </div>
+  <div class="nav-item">
+    <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 4h12M2 8h12M2 12h7"/></svg>
+    Brouillons de la semaine
+  </div>
+  <div class="nav-item">
+    <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><polyline points="8 5 8 8 10 10"/></svg>
+    Historique
+  </div>
+  <div class="spacer"></div>
+  <div class="user-area">
+    <div class="avatar">M</div>
+    <div>
+      <div class="user-name">Marie</div>
+      <div class="user-role">Monitrice</div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

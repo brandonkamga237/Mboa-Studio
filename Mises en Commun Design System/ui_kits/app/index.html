@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mises en Commun — UI Kit</title>
+<link rel="stylesheet" href="../../colors_and_type.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="Components.jsx"></script>
+<script type="text/babel" src="Dashboard.jsx"></script>
+<script type="text/babel" src="Brouillon.jsx"></script>
+<script type="text/babel" src="BrouillonList.jsx"></script>
+<script type="text/babel" src="Historique.jsx"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body, #root { height: 100%; margin: 0; padding: 0; }
+  body { font-family: var(--font-body); background: var(--bg-page); overflow: hidden; }
+  #root { display: flex; flex-direction: column; height: 100%; }
+
+  /* Role switcher bar */
+  .role-bar {
+    background: #141E33; padding: 6px 20px;
+    display: flex; align-items: center; gap: 12px;
+    font-size: 11px; color: rgba(255,255,255,0.5);
+    font-family: var(--font-body); flex-shrink: 0;
+    z-index: 100;
+  }
+  .role-btn {
+    padding: 3px 10px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.2);
+    background: transparent; color: rgba(255,255,255,0.55); cursor: pointer;
+    font-size: 11px; font-family: var(--font-body); font-weight: 600;
+    transition: all 150ms ease;
+  }
+  .role-btn.active { background: rgba(255,255,255,0.14); color: #FDFAF7; border-color: rgba(255,255,255,0.4); }
+  .role-btn:hover:not(.active) { background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.8); }
+
+  /* Draft status switcher */
+  .status-bar {
+    background: #F5E9C8; padding: 5px 20px 5px 236px;
+    display: flex; align-items: center; gap: 10px;
+    font-size: 11px; color: #92400E; font-family: var(--font-body);
+    flex-shrink: 0; border-bottom: 1px solid #E8D5A0;
+  }
+  .status-btn {
+    padding: 2px 8px; border-radius: 999px;
+    border: 1px solid rgba(146,64,14,0.3);
+    background: transparent; color: #92400E;
+    cursor: pointer; font-size: 11px; font-family: var(--font-body); font-weight: 600;
+    transition: all 150ms ease;
+  }
+  .status-btn.active { background: #C9952A; color: white; border-color: #C9952A; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState } = React;
+
+function App() {
+  const [screen, setScreen] = useState('dashboard');
+  const [userRole, setUserRole] = useState('moniteur');
+  const [draftStatus, setDraftStatus] = useState('cree');
+  const [isOwner, setIsOwner] = useState(true);
+
+  function navigate(target) {
+    if (target === 'new' || (target && target.id)) {
+      setScreen('brouillon');
+    } else {
+      setScreen(target);
+    }
+  }
+
+  const showStatusBar = screen === 'brouillon';
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+
+      {/* Dev toolbar: role switcher */}
+      <div className="role-bar">
+        <span>Vue :</span>
+        {['moniteur','responsable','admin'].map(r => (
+          <button key={r} className={`role-btn${userRole === r ? ' active' : ''}`} onClick={() => setUserRole(r)}>
+            {r.charAt(0).toUpperCase() + r.slice(1)}
+          </button>
+        ))}
+        <span style={{ marginLeft: 16 }}>Écran :</span>
+        {[
+          { id: 'dashboard', label: 'Tableau de bord' },
+          { id: 'week-drafts', label: 'Brouillons' },
+          { id: 'brouillon', label: 'Brouillon' },
+          { id: 'history', label: 'Historique' },
+        ].map(s => (
+          <button key={s.id} className={`role-btn${screen === s.id ? ' active' : ''}`} onClick={() => setScreen(s.id)}>
+            {s.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Brouillon status bar (only when viewing brouillon) */}
+      {showStatusBar && (
+        <div className="status-bar">
+          <span>Statut du brouillon :</span>
+          {['cree','candidat','officiel','archive'].map(s => (
+            <button key={s} className={`status-btn${draftStatus === s ? ' active' : ''}`} onClick={() => setDraftStatus(s)}>
+              {s === 'cree' ? 'Créé' : s === 'candidat' ? 'Candidat' : s === 'officiel' ? 'Officiel' : 'Archivé'}
+            </button>
+          ))}
+          <span style={{ marginLeft: 12 }}>Auteur :</span>
+          <button className={`status-btn${isOwner ? ' active' : ''}`} onClick={() => setIsOwner(true)}>Moi</button>
+          <button className={`status-btn${!isOwner ? ' active' : ''}`} onClick={() => setIsOwner(false)}>Autre</button>
+        </div>
+      )}
+
+      {/* Main layout */}
+      <div style={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
+        <Sidebar activeScreen={screen} onNavigate={s => setScreen(s)} userRole={userRole} />
+
+        <div style={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
+          {screen === 'dashboard' && (
+            <Dashboard onNavigate={navigate} userRole={userRole} />
+          )}
+          {screen === 'week-drafts' && (
+            <BrouillonList onNavigate={navigate} onOpenDraft={navigate} userRole={userRole} />
+          )}
+          {screen === 'brouillon' && (
+            <Brouillon onNavigate={navigate} userRole={userRole} status={draftStatus} isOwner={isOwner} />
+          )}
+          {screen === 'history' && (
+            <Historique onNavigate={navigate} />
+          )}
+          {screen === 'my-drafts' && (
+            <BrouillonList onNavigate={navigate} onOpenDraft={navigate} userRole={userRole} />
+          )}
+          {screen === 'presence' && (
+            <PresenceScreen onNavigate={navigate} />
+          )}
+          {screen === 'admin' && (
+            <AdminScreen onNavigate={navigate} />
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Presence Screen ─────────────────────────────────────────────────────
+function PresenceScreen({ onNavigate }) {
+  const moniteurs = [
+    { name: 'Marie', status: 'present' },
+    { name: 'Paul', status: 'absent' },
+    { name: 'Esther', status: 'excuse' },
+    { name: 'Jean', status: 'present' },
+    { name: 'Sophie', status: null },
+    { name: 'Lucas', status: null },
+  ];
+  const [presences, setPresences] = useState(
+    Object.fromEntries(moniteurs.map(m => [m.name, m.status]))
+  );
+
+  const opts = [
+    { key: 'present', label: 'Présent', color: '#15803D', bg: '#F0FDF4' },
+    { key: 'absent',  label: 'Absent',  color: '#DC2626', bg: '#FEF2F2' },
+    { key: 'excuse',  label: 'Excusé',  color: '#D97706', bg: '#FFFBEB' },
+  ];
+
+  return (
+    <div style={{ flex: 1, overflowY: 'auto', padding: '32px 40px', background: 'var(--bg-page)' }}>
+      <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 24, fontWeight: 600, color: 'var(--fg-primary)', margin: '0 0 6px' }}>
+        Présence du samedi
+      </h1>
+      <p style={{ fontSize: 13, color: 'var(--fg-muted)', margin: '0 0 24px', fontFamily: 'var(--font-body)' }}>
+        Samedi 10 mai 2025 · Saisie par le Responsable
+      </p>
+      <Card style={{ maxWidth: 500 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+          {moniteurs.map((m, i) => (
+            <div key={m.name} style={{
+              display: 'flex', alignItems: 'center', gap: 12,
+              padding: '12px 0',
+              borderBottom: i < moniteurs.length - 1 ? '1px solid var(--border-subtle)' : 'none'
+            }}>
+              <Avatar name={m.name} size={32} />
+              <span style={{ flex: 1, fontSize: 14, fontWeight: 500, color: 'var(--fg-primary)', fontFamily: 'var(--font-body)' }}>
+                {m.name}
+              </span>
+              <div style={{ display: 'flex', gap: 6 }}>
+                {opts.map(opt => (
+                  <button
+                    key={opt.key}
+                    onClick={() => setPresences(p => ({ ...p, [m.name]: opt.key }))}
+                    style={{
+                      padding: '4px 10px', borderRadius: 999,
+                      border: presences[m.name] === opt.key ? `1.5px solid ${opt.color}` : '1px solid var(--border-medium)',
+                      background: presences[m.name] === opt.key ? opt.bg : 'transparent',
+                      color: presences[m.name] === opt.key ? opt.color : 'var(--fg-muted)',
+                      fontSize: 11, fontWeight: 600, cursor: 'pointer',
+                      fontFamily: 'var(--font-body)', transition: 'all 150ms ease'
+                    }}
+                  >{opt.label}</button>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+        <div style={{ marginTop: 16, display: 'flex', justifyContent: 'flex-end' }}>
+          <Btn variant="primary" size="sm">Enregistrer la présence</Btn>
+        </div>
+      </Card>
+    </div>
+  );
+}
+
+// ─── Admin Screen ─────────────────────────────────────────────────────────
+function AdminScreen({ onNavigate }) {
+  const users = [
+    { name: 'Jean-Marc', email: 'jm@eglise.fr', role: 'responsable' },
+    { name: 'Sophie',    email: 'sophie@eglise.fr', role: 'responsable' },
+    { name: 'Marie',     email: 'marie@eglise.fr',  role: 'moniteur' },
+    { name: 'Paul',      email: 'paul@eglise.fr',   role: 'moniteur' },
+    { name: 'Esther',    email: 'esther@eglise.fr', role: 'moniteur' },
+    { name: 'Jean',      email: 'jean@eglise.fr',   role: 'moniteur' },
+  ];
+  const roleColors = { responsable: { bg: '#DBEAFE', color: '#1E40AF' }, moniteur: { bg: '#F5E9C8', color: '#92400E' }, admin: { bg: '#EDE9FE', color: '#5B21B6' } };
+
+  return (
+    <div style={{ flex: 1, overflowY: 'auto', padding: '32px 40px', background: 'var(--bg-page)' }}>
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 24 }}>
+        <div>
+          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 24, fontWeight: 600, color: 'var(--fg-primary)', margin: 0 }}>
+            Administration
+          </h1>
+          <p style={{ fontSize: 13, color: 'var(--fg-muted)', margin: '4px 0 0', fontFamily: 'var(--font-body)' }}>
+            Gestion des moniteurs et paramètres
+          </p>
+        </div>
+        <Btn variant="primary" size="sm"><IconPlus /> Ajouter un moniteur</Btn>
+      </div>
+
+      <Card style={{ maxWidth: 580 }}>
+        <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--fg-muted)', marginBottom: 12 }}>
+          Moniteurs ({users.length})
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+          {users.map((u, i) => {
+            const rc = roleColors[u.role] || roleColors.moniteur;
+            return (
+              <div key={u.name} style={{
+                display: 'flex', alignItems: 'center', gap: 12,
+                padding: '11px 0',
+                borderBottom: i < users.length - 1 ? '1px solid var(--border-subtle)' : 'none'
+              }}>
+                <Avatar name={u.name} size={32} />
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--fg-primary)', fontFamily: 'var(--font-body)' }}>{u.name}</div>
+                  <div style={{ fontSize: 11, color: 'var(--fg-muted)', fontFamily: 'var(--font-body)' }}>{u.email}</div>
+                </div>
+                <span style={{
+                  padding: '2px 8px', borderRadius: 4,
+                  background: rc.bg, color: rc.color,
+                  fontSize: 10, fontWeight: 700, textTransform: 'uppercase',
+                  letterSpacing: '0.03em', fontFamily: 'var(--font-body)'
+                }}>{u.role}</span>
+                <Btn variant="ghost" size="sm">Modifier</Btn>
+              </div>
+            );
+          })}
+        </div>
+      </Card>
+    </div>
+  );
+}
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
+</script>
+</body>
+</html>

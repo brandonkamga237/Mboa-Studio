@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { margin: 0; padding: 20px; background: var(--bg-page); font-family: var(--font-body); }
+  .thread { max-width: 460px; display: flex; flex-direction: column; gap: 0; }
+  .comment { display: flex; gap: 10px; padding: 10px 0; }
+  .comment.reply { padding-left: 32px; border-left: 2px solid var(--border-subtle); margin-left: 16px; }
+  .comment.resolved { opacity: 0.5; }
+  .avatar {
+    width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; color: white;
+  }
+  .body { flex: 1; display: flex; flex-direction: column; gap: 3px; }
+  .author-line { display: flex; align-items: center; gap: 8px; }
+  .author { font-size: var(--text-sm); font-weight: var(--weight-semibold); color: var(--fg-primary); }
+  .time { font-size: var(--text-xs); color: var(--fg-muted); }
+  .resolved-tag { font-size: 10px; color: #15803D; font-weight: 600; }
+  .text { font-size: var(--text-sm); color: var(--fg-secondary); line-height: 1.5; }
+  .reply-link { font-size: var(--text-xs); color: var(--fg-link); cursor: pointer; margin-top: 2px; display: inline-block; }
+</style>
+</head>
+<body>
+<div class="thread">
+  <div class="comment">
+    <div class="avatar" style="background:#1E2D4A">P</div>
+    <div class="body">
+      <div class="author-line">
+        <span class="author">Paul</span>
+        <span class="time">Sam. 10h14</span>
+      </div>
+      <span class="text">Ce chant est trop solennel pour les petits, je propose "Mon Dieu est si grand".</span>
+      <span class="reply-link">Répondre</span>
+    </div>
+  </div>
+  <div class="comment reply">
+    <div class="avatar" style="background:#2B4C7E">E</div>
+    <div class="body">
+      <div class="author-line">
+        <span class="author">Esther</span>
+        <span class="time">Sam. 10h22</span>
+      </div>
+      <span class="text">D'accord, mais "Mon Dieu est si grand" on l'a déjà fait dimanche dernier.</span>
+      <span class="reply-link">Répondre</span>
+    </div>
+  </div>
+  <div class="comment reply">
+    <div class="avatar" style="background:#C9952A">P</div>
+    <div class="body">
+      <div class="author-line">
+        <span class="author">Paul</span>
+        <span class="time">Sam. 10h31</span>
+        <span class="resolved-tag">✓ Résolu</span>
+      </div>
+      <span class="text">Tu as raison. Que penses-tu de "Quel ami fidèle et tendre" ?</span>
+    </div>
+  </div>
+  <div class="comment reply resolved">
+    <div class="avatar" style="background:#15803D">M</div>
+    <div class="body">
+      <div class="author-line">
+        <span class="author">Marie</span>
+        <span class="time">Sam. 10h45</span>
+      </div>
+      <span class="text">Je veux bien essayer ta proposition.</span>
+    </div>
+  </div>
+</div>
+</body>
+</html>

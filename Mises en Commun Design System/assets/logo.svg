@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 64" fill="none">
+  
+  <rect x="4" y="10" width="20" height="26" rx="2" fill="#C9952A"></rect>
+  <rect x="6" y="12" width="16" height="22" rx="1" fill="#F5E9C8"></rect>
+  <line x1="14" y1="12" x2="14" y2="34" stroke="#C9952A" stroke-width="1.5"></line>
+  <rect x="8" y="16" width="4" height="1.5" rx="0.75" fill="#C9952A"></rect>
+  <rect x="8" y="19" width="4" height="1.5" rx="0.75" fill="#C9952A"></rect>
+  <rect x="8" y="22" width="4" height="1.5" rx="0.75" fill="#C9952A"></rect>
+
+  
+  <circle cx="19" cy="28" r="2" fill="#C9952A"></circle>
+  <line x1="21" y1="28" x2="21" y2="22" stroke="#C9952A" stroke-width="1.5"></line>
+
+  
+  <text x="36" y="31" font-family="&#39;Lora&#39;, Georgia, serif" font-size="18" font-weight="600" fill="#1E2D4A">Mises en Commun</text>
+  <text x="36" y="46" font-family="&#39;Source Sans 3&#39;, Arial, sans-serif" font-size="11" font-weight="400" letter-spacing="0.08em" fill="#6B7280">CULTE D&#39;ENFANTS</text>
+</svg>

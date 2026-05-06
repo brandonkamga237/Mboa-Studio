@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { margin: 0; padding: 20px; background: var(--bg-page); font-family: var(--font-body); }
+  .row { display: flex; gap: 16px; flex-wrap: wrap; }
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-medium);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+    padding: var(--card-padding);
+    width: 220px;
+    border-left: 4px solid;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .card-header { display: flex; align-items: center; justify-content: space-between; }
+  .card-title { font-family: var(--font-display); font-size: var(--text-md); font-weight: var(--weight-semibold); color: var(--fg-primary); }
+  .pill { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: var(--radius-pill); font-size: 10px; font-weight: 700; }
+  .meta { font-size: var(--text-xs); color: var(--fg-muted); }
+  .actions { display: flex; gap: 6px; margin-top: 4px; }
+  .btn-sm { padding: 4px 10px; border-radius: var(--radius-md); font-size: var(--text-xs); font-weight: 600; cursor: pointer; border: 1px solid var(--border-medium); background: var(--bg-card); color: var(--fg-primary); font-family: var(--font-body); }
+  .btn-sm-primary { background: var(--brand-navy); color: white; border-color: var(--brand-navy); }
+</style>
+</head>
+<body>
+<div class="row">
+  <!-- Draft -->
+  <div class="card" style="border-left-color:#9CA3AF">
+    <div class="card-header">
+      <span class="card-title">Brouillon de Marie</span>
+      <span class="pill" style="background:#E5E7EB;color:#6B7280">Créé</span>
+    </div>
+    <span class="meta">Modifié il y a 2h · 8 chants · 3 commentaires</span>
+    <div class="actions">
+      <button class="btn-sm">Lire</button>
+      <button class="btn-sm">Commenter</button>
+    </div>
+  </div>
+  <!-- Candidate -->
+  <div class="card" style="border-left-color:#D97706">
+    <div class="card-header">
+      <span class="card-title">Brouillon de Paul</span>
+      <span class="pill" style="background:#FDE68A;color:#92400E">Candidat</span>
+    </div>
+    <span class="meta">Modifié hier · 10 chants · 1 commentaire</span>
+    <div class="actions">
+      <button class="btn-sm">Lire</button>
+      <button class="btn-sm btn-sm-primary">Valider</button>
+    </div>
+  </div>
+  <!-- Official -->
+  <div class="card" style="border-left-color:#15803D">
+    <div class="card-header">
+      <span class="card-title">Brouillon d'Esther</span>
+      <span class="pill" style="background:#BBF7D0;color:#14532D">Officiel</span>
+    </div>
+    <span class="meta">Validé par Esther · 8 nov. 2025</span>
+    <div class="actions">
+      <button class="btn-sm">Lire</button>
+      <button class="btn-sm">PDF</button>
+    </div>
+  </div>
+</div>
+</body>
+</html>
